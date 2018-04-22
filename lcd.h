@@ -48,6 +48,10 @@ void lcdCursorRow2(LcdHandle* lcd);
 void lcdSend(LcdHandle* lcd);
 ///Send command (bits RS, R/W, DB7, DB6, DB5, DB4)
 void lcdCommand(LcdHandle* lcd, int command);
+///Send a character to the LCD
+void lcdChar(LcdHandle* lcd, char value);
+///Send an array of characters to the LCD
+void lcdMessage(LcdHandle* lcd, char* message);
 
 #endif
 

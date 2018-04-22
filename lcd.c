@@ -92,9 +92,9 @@ void lcdSend(LcdHandle* lcd)
     int i = 0; //Check bits hi or lo by bitmask
     LcdPort* enable = &(lcd->en);
     lcdPortState(enable, false); //Send enable signal
-    for(i = 0; i < 2000000; i++); 
+    for(i = 0; i < 20000; i++); 
     lcdPortState(enable, true); //Send enable signal
-    for(i = 0; i < 2000000; i++); 
+    for(i = 0; i < 20000; i++); 
     lcdPortState(enable, false); //Send enable signal
 }
 
@@ -107,5 +107,24 @@ void lcdCommand(LcdHandle* lcd, int command)
     lcdPortState(&(lcd->rw), (command & (1U << 4)) > 0);
     lcdPortState(&(lcd->rs), (command & (1U << 5)) > 0);
     lcdSend(lcd);
+}
+
+void lcdChar(LcdHandle* lcd, char value)
+{
+    int command0 = value >> 4, //RS HI
+    command1 = value & 0xF;
+    command0 |= 1U << 5;
+    command1 |= 1U << 5;
+    lcdCommand(lcd, command0);
+    lcdCommand(lcd, command1);
+}
+
+void lcdMessage(LcdHandle* lcd, char* message)
+{
+    while(*message)
+    {
+        lcdChar(lcd, *message);
+        message++;
+    }
 }
 
