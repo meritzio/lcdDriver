@@ -2,7 +2,8 @@
 #define LCDPORT_H
 
 #include<stdbool.h>
-#include<stdlib.h>
+
+//Device
 #include "TM4C123.h"
 
 typedef struct LcdPort

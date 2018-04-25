@@ -4,23 +4,28 @@
 
 int main(void)
 {
-    LcdHandle lcd = lcdConstruct(
-        lcdPortConstruct('F',2), //RS PF2
-        lcdPortConstruct('F',3), //RW PF3
-        lcdPortConstruct('B',3), //EN PB3
-        lcdPortConstruct('C',7), //DB4 PC7
-        lcdPortConstruct('C',6), //DB5 PC6
-        lcdPortConstruct('C',5), //DB6 PC5
-        lcdPortConstruct('C',4)  //DB7 PC4
+    //Port wiring specification of LED
+    LcdHandle lcdScreen = lcdConstruct(
+        lcdPortConstruct('F', 2),
+        lcdPortConstruct('F', 3),
+        lcdPortConstruct('B', 3),
+        lcdPortConstruct('C', 7),
+        lcdPortConstruct('C', 6),
+        lcdPortConstruct('C', 5),
+        lcdPortConstruct('C', 4),
+        16,
+        2
     );
-	  LcdHandle* lcdPtr = &lcd;
     
-    lcdInitialize(lcdPtr);
-    lcdClearDisplay(lcdPtr);
-    lcdCommand(lcdPtr, 0x0U);
-    lcdCommand(lcdPtr, 0xFU);
-    lcdSetAppearance(&lcd, true, true, true);
-    lcdMessage(lcdPtr, "Hello World");
-    //lcdCursorRight(&lcd);
-    while(true){};
+    LcdHandle* lcd = &lcdScreen; //ptr Convenience
+    lcdInitialize(lcd);
+    lcdClearDisplay(lcd);
+    lcdSetAppearance(lcd, true, true, true);
+    lcdMessage(lcd, "Hello World");
+    
+    while(true)
+    {
+        for(int i = 0; i < 640000; i++);
+        lcdShiftLeft(lcd);    
+    };
 }

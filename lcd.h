@@ -1,8 +1,6 @@
 #ifndef LCD_H
 #define LCD_H
 #include<stdbool.h>
-#include<stdlib.h>
-
 #include "lcdPort.h"
 
 ///Create an lcd screen reference
@@ -22,10 +20,17 @@ typedef struct LcdHandle
     LcdPort db6;
     ///Digital out 3
     LcdPort db7;
+    ///Row Length
+    unsigned int rowLength;
+    ///Number of Rows
+    unsigned int rowCount;
+    ///Position
+    unsigned int position;
 } LcdHandle;
 
 ///Construct the LcdHandle specifying which digital out pins are referenced
-LcdHandle lcdConstruct(LcdPort rs, LcdPort rw, LcdPort en, LcdPort db4, LcdPort db5, LcdPort db6, LcdPort db7);
+LcdHandle lcdConstruct(LcdPort rs, LcdPort rw, LcdPort en, LcdPort db4, LcdPort db5, LcdPort db6, LcdPort db7,
+                        unsigned int rowLength, unsigned int rowCount);
 ///Run the start procedure to initialise the screen and start 4 bit mode
 void lcdInitialize(LcdHandle* lcd);
 ///Clear all characters on the display
@@ -36,9 +41,9 @@ void lcdSetAppearance(LcdHandle* lcd, bool displayOn, bool cursorOn, bool cursor
 void lcdShiftLeft(LcdHandle* lcd);
 ///Shift all characters right
 void lcdShiftRight(LcdHandle* lcd);
-///Move the cursor left
+///Move the cursor left (loops around at position 0)
 void lcdCursorLeft(LcdHandle* lcd);
-///Move the cursor right
+///Move the cursor right (loops back to position 0)
 void lcdCursorRight(LcdHandle* lcd);
 ///Move the cursor to the start of row 1
 void lcdCursorRow1(LcdHandle* lcd);
@@ -52,6 +57,8 @@ void lcdCommand(LcdHandle* lcd, int command);
 void lcdChar(LcdHandle* lcd, char value);
 ///Send an array of characters to the LCD
 void lcdMessage(LcdHandle* lcd, char* message);
+///(Internal use) track the cursor motion by a quantity
+void lcdMotion(LcdHandle* lcd, int amount);
 
 #endif
 
